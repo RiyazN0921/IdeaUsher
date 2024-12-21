@@ -2,11 +2,15 @@ require('dotenv').config()
 
 const mongoose = require('mongoose')
 
-exports.dbConnection = async  () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log('Database Connection Established')
-    } catch (error) {
-        console.log(error)
-    }
+const logger = require('../winston/logger')
+
+const chalk = require('chalk')
+
+exports.dbConnection = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI)
+    logger.info(chalk.bold.blueBright('Database Connection Successful'))
+  } catch (error) {
+    logger.error(chalk.red.red(error))
+  }
 }
