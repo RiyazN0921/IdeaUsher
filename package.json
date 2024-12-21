@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/RiyazN0921/IdeaUsher"
   },
-  "homepage": "https://github.com/RiyazN0921/IdeaUsher#readme",
+  "homepage": "https://github.com/RiyazN0921/IdeaUsher",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.717.0",
     "aws-sdk": "^2.1692.0",
