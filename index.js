@@ -10,6 +10,8 @@ const mainRouter = require('./src/routes/index.routes')
 
 const { logMiddleware } = require('./src/middleware/logger.middleware')
 
+const { errorHandler } = require('./src/middleware/errorHandler.middleware')
+
 const logger = require('./src/winston/logger')
 
 const cors = require('cors')
@@ -27,6 +29,12 @@ app.use(logMiddleware)
 app.use(cors())
 
 app.use('/api', mainRouter)
+
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'welcome to Idea Usher APIs' })
+})
+
+app.use(errorHandler)
 
 logger.info(
   `${chalk.bold.blueBright(
