@@ -55,3 +55,13 @@ exports.createPost = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.fetchAllTagsAlongWithPosts = async (req, res, next) => {
+  try {
+    const tags = await postModel.find().populate('tags')
+
+    return sendResponse(res, 200, 'tags and posts fetched successfully', tags)
+  } catch (error) {
+    next(error)
+  }
+}

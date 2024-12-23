@@ -23,4 +23,6 @@ postRouter.post(
   postController.createPost,
 )
 
+postRouter.get('/all-tags', postController.fetchAllTagsAlongWithPosts)
+
 module.exports = postRouter

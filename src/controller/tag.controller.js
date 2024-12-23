@@ -75,3 +75,44 @@ exports.getPosts = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.addTagsToPost = async (req, res, next) => {
+  try {
+    const { postId } = req.params
+    const { tags } = req.body
+
+    const tagIds = await Promise.all(
+      tags.map(async (tagName) => {
+        let tag = await tagModel.findOne({ name: tagName })
+        if (!tag) {
+          tag = await tagModel.create({ name: tagName })
+        }
+        return tag._id
+      }),
+    )
+
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { $addToSet: { tags: { $each: tagIds } } },
+      { new: true },
+    )
+
+    if (!updatedPost) {
+      throw new CustomError('post not found', 404)
+    }
+
+    return sendResponse(res, 200, 'tags added successfully', updatedPost)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.fetchAllTags = async (req, res, next) => {
+  try {
+    const tags = await tagModel.find()
+
+    return sendResponse(res, 200, 'tags fetched successfully', tags)
+  } catch (error) {
+    next(error)
+  }
+}

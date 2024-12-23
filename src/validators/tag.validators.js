@@ -19,4 +19,48 @@ const getPostsSchema = Joi.object({
   }),
 })
 
-module.exports = { getPostsSchema }
+const addTagsSchema = Joi.object({
+  tags: Joi.alternatives()
+    .try(
+      Joi.array()
+        .items(
+          Joi.string().trim().required().messages({
+            'string.base': `"tags" should contain strings`,
+            'string.empty': `"tags" cannot contain empty values`,
+          }),
+        )
+        .required()
+        .messages({
+          'array.base': `"tags" should be an array`,
+          'any.required': `"tags" is a required field`,
+        }),
+      Joi.string()
+        .custom((value, helpers) => {
+          try {
+            const parsedTags = JSON.parse(value)
+            if (
+              Array.isArray(parsedTags) &&
+              parsedTags.every((tag) => typeof tag === 'string')
+            ) {
+              return parsedTags
+            } else {
+              return helpers.message(
+                '"tags" should be a valid JSON array of strings',
+              )
+            }
+          } catch (err) {
+            return helpers.message(
+              '"tags" should be a valid JSON array of strings',
+            )
+          }
+        })
+        .required()
+        .messages({
+          'string.base': `"tags" should be a valid stringified JSON array`,
+          'any.required': `"tags" is a required field`,
+        }),
+    )
+    .required(),
+})
+
+module.exports = { getPostsSchema, addTagsSchema }
